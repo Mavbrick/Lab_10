@@ -6,7 +6,7 @@
  * I acknowledge all content contained herein, excluding template or example
  * code is my own original work.
  *
- *  Demo Link: https://youtu.be/7l7bcMnh4yw 
+ *  Demo Link: https://youtu.be/B9lhNFWcJ4M
  */
 #include <avr/io.h>
 #ifdef _SIMULATE_
@@ -75,6 +75,7 @@ enum Keypad_States { start, w1, bar, w2, one, w3, two, w4, three, w5, four, w6, 
 
 int keypadSM(int state) {
 	unsigned char x = GetKeypadKey();
+	unsigned char butt = ~PINB & 0x80;
 	switch(state) {
 		case start:
 			state = w1;
@@ -207,8 +208,8 @@ int keypadSM(int state) {
                 break;
 
 		case unlock:
-			if(PORTB  == 0x00) {
-				state = w1;
+			if(butt) {
+				state = start;
 			}
 			else {
 				state = unlock;
@@ -230,7 +231,7 @@ int keypadSM(int state) {
 enum Lock_States { pause, lock };
 
 int lockSM(int state) {
-	unsigned char tmpA = ~PINA & 0x01;
+	unsigned char tmpA = ~PINB & 0x80;
 	switch(state) {
 		case pause:
 			if(tmpA) {
